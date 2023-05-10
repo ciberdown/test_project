@@ -1,23 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes } from "react-router-dom";
+import { Route } from "react-router-dom";
+import "./App.css";
+import Rejister from "./components/register";
+import Search from "./components/search";
+import { createTheme } from "@mui/material";
 
 function App() {
+
+  const theme = createTheme({
+    direction: 'rtl', // Both here and <body dir="rtl">
+  });
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      className="App"
+      style={{
+        width: "100%",
+        height: "500px",
+        padding: "0",
+        margin: "0px",
+        display: "flex",
+        justifyContent: "center",
+        direction:'rtl'
+      }}
+    >
+      <Routes>
+        <Route path="/" element={<Rejister />} />
+        <Route path="/search" element={<Search />} />
+      </Routes>
     </div>
   );
 }
