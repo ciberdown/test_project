@@ -18,7 +18,6 @@ const styles = {register:{
 export default function Rejister() {
   const [user, setUser] = useState();
   const [pass, setPass] = useState();
-  const [res, setRes] = useState();
   const navigate = useNavigate();
 
   const [accessToken, setAccessToken] = useState();
@@ -46,7 +45,6 @@ export default function Rejister() {
     axios.post(url, data).then(
       (response) => {
         console.log(response);
-        setRes(response);
         setAccessToken(response.data.accessToken);
         localStorage.setItem("accessToken", response.data.accessToken);
         navigate("/search");

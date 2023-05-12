@@ -35,12 +35,14 @@ export default function Search() {
   }
   function changeHandle(e) {
     const provinceName = e.target.innerText;
-    provinces.map((item) => {
-      if (item.name === provinceName) {
-        const all = allCities; //to keep all cities somewhere
-        setCities(all.filter((i) => i.provinceId === item.id));
-      }
-    });
+    if (provinceName === "") setCities(allCities);
+    else
+      provinces.map((item) => {
+        if (item.name === provinceName) {
+          const all = allCities; //to keep all cities somewhere
+          setCities(all.filter((i) => i.provinceId === item.id));
+        }
+      });
   }
   return (
     <div className="search">
