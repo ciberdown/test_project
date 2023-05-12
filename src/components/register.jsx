@@ -20,7 +20,6 @@ export default function Rejister() {
   const [pass, setPass] = useState();
   const navigate = useNavigate();
 
-  const [accessToken, setAccessToken] = useState();
   function usernameHandle(e) {
     setUser(e.target.value);
   }
@@ -36,16 +35,10 @@ export default function Rejister() {
       username: user,
       password: pass,
     };
-
-    data = {
-      username: "yari",
-      password: "211385321",
-    };
     // send a POST request
     axios.post(url, data).then(
       (response) => {
-        console.log(response);
-        setAccessToken(response.data.accessToken);
+        //console.log(response);
         localStorage.setItem("accessToken", response.data.accessToken);
         navigate("/search");
       },
