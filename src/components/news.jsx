@@ -1,104 +1,96 @@
 import axios from "axios";
 import { Component } from "react";
-import Button from "@mui/material/Button";
-const styles={names:{
-    fontWeight: "bolder",
-    fontFamily: "fantasy",
-    margin: "10px",
-    marginBottom: "20px",
-    display:'flex',
-    justifyContent:'end'
-  }, titles:{
-    fontWeight: "bold",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
+import SingleNew from "./singleNew";
+import BasicSelect from "./selectionPart";
+const urls = [
+  "https://newsapi.org/v2/everything?q=apple&from=2023-05-12&to=2023-05-12&sortBy=popularity&apiKey=951549abbc764ab284db9ac5ad0c7026",
+  "https://newsapi.org/v2/everything?q=tesla&from=2023-04-13&sortBy=publishedAt&apiKey=951549abbc764ab284db9ac5ad0c7026",
+  "https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=951549abbc764ab284db9ac5ad0c7026",
+  "https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=951549abbc764ab284db9ac5ad0c7026",
+  "https://newsapi.org/v2/everything?domains=wsj.com&apiKey=951549abbc764ab284db9ac5ad0c7026",
+];
+const styles = {
+  news: {
+    padding: "20px",
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(500px, 1fr)",
+    gridAutoRows: "auto",
+    rowGap: 20,
+    columnGap: 40,
   },
-  imgs:{
-    display: "block",
-    height: "300px",
-    borderRadius: "10px",
-  },des:{ display: "flex", gap: "30px", padding: "20px" }
-}
+};
 export default class News extends Component {
-  state = {
-    news: [],
-  };
-  componentDidMount() {
-    const url =
-      "https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=951549abbc764ab284db9ac5ad0c7026";
-    this.getData(url);
+  constructor(props) {
+    super(props);
+    this.state = {
+      news: [],
+      url: urls[3],
+      loading: "Loading...",
+    };
+    this.setNews = this.setNews.bind(this);
+    this.getDataWithSelection = this.getDataWithSelection.bind(this);
   }
-  async getData(url) {
+  componentDidMount() {
+    this.getData();
+  }
+  componentDidUpdate() {
+    console.log("updated");
+  }
+  setNews(newsList) {
+    this.setState({
+      news: newsList,
+    });
+  }
+  getDataWithSelection(number) {
+    this.setState({
+      url: urls[number],
+      loading: "Loading...",
+      news: [],
+    });
+    this.getData();
+  }
+  setLoading = (str) => {
+    this.setState({
+      loading: str,
+    });
+  };
+  async getData() {
     try {
-      const res = await axios.get(url);
+      const res = await axios.get(this.state.url);
       console.log(res.data.articles);
-      this.setState(() => ({
-        news: [...res.data.articles],
-      }));
+      res.data.articles.length === 0
+        ? this.setLoading("not found")
+        : this.setNews(res.data.articles);
     } catch (error) {
+      this.setLoading("not found");
       console.log(error);
     }
   }
-  renderNames(author) {
-    return (
-      <div
-        style={styles.names}
-      >
-        {author}
-      </div>
-    );
-  }
-
-  renderTitles(title) {
-    return (
-      <div
-        style={styles.titles}
-      >
-        "{title}"<Button variant="contained">Remove</Button>
-      </div>
-    );
-  }
-  renderDiscription(des, url, imageUrl) {
-    return (
-      <section style={styles.des}>
-        {" "}
-        <img
-          style={styles.imgs}
-          src={imageUrl}
-        />
-        <div>
-          {des}
-          <br />
-          <a href={url}>learn more</a>
-        </div>
-      </section>
-    );
-  }
-  renderNews() {
-    return this.state.news.map((item, index) => {
-      return (
-        <section key={index} style={{ fontFamily: "sans-serif" }}>
-          <>{this.renderTitles(item.title)}</>
-          <>
-            {this.renderDiscription(
-              item.description,
-              item.url,
-              item.urlToImage
-            )}
-          </>
-          <>{this.renderNames(item.author)}</>
-          <hr style={{ color: "black", backgroundColor: "black" }} />
-        </section>
-      );
+  removeElement = (e) => {
+    const idx = e.target.id;
+    this.setState((states) => {
+      const news = states.news;
+      news.splice(idx, 1);
+      return { news };
     });
-  }
+
+  };
+
   render() {
     return (
-      <div className="news" style={{ padding: "20px" }}>
-        {this.state.news.length === 0 && <div>Loading...</div>}
-        {this.renderNews()}
-      </div>
+      <>
+        {<BasicSelect setURL={this.getDataWithSelection} />}
+        <div className="news" style={styles.news}>
+          {this.state.news.length === 0 ? (
+            <div>{this.state.loading}</div>
+          ) : (
+            <SingleNew
+              removeHandle={this.removeElement}
+              news={this.state.news}
+            />
+          )}
+        </div>
+      </>
     );
   }
 }
