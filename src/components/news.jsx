@@ -28,45 +28,54 @@ export default class News extends Component {
   componentDidMount() {
     this.getData(urls[this.defaultValue]);
   }
- 
-  getDataWithSelection = (number)=>{
-    console.log(number)
+
+  getDataWithSelection = (number) => {
+    console.log(number);
     this.setState({
       loading: "Loading...",
       news: [],
     });
     this.getData(urls[number]);
-  }
+  };
   async getData(url) {
     try {
       const res = await axios.get(url);
       console.log(res.data.articles);
       res.data.articles.length === 0
-        ? this.setState({loading: 'zero news'})
-        : this.setState({news: res.data.articles})
+        ? this.setState({ loading: "zero news" })
+        : this.setState({ news: res.data.articles });
     } catch (error) {
-      this.setState({loading: 'network error!'})
+      this.setState({ loading: "network error!" });
       console.log(error);
     }
   }
 
-  removeElement=(e)=>{
+  removeElement = (e) => {
     const idx = parseInt(e.target.id);
-    const myNews = this.state.news.filter((item, index)=> index !== idx);
-    this.setState({news: myNews});
-    if(myNews.length === 0 )
-      this.setState({loading: 'no New found'});
-  }
-
+    const myNews = this.state.news.filter((item, index) => index !== idx);
+    this.setState({ news: myNews });
+    if (myNews.length === 0) this.setState({ loading: "no New found" });
+  };
+  addElement = (e) => {
+    const rnd = Math.floor(Math.random() * this.state.news.length - 1);
+    const myNew = this.state.news[rnd];
+    this.setState({ news: [myNew, ...this.state.news] });
+  };
   render() {
     return (
       <>
-        {<BasicSelect defaultValue={this.defaultValue} setURL={this.getDataWithSelection} />}
+        {
+          <BasicSelect
+            defaultValue={this.defaultValue}
+            setURL={this.getDataWithSelection}
+          />
+        }
         <div className="news" style={styles.news}>
           {this.state.news.length === 0 ? (
             <div>{this.state.loading}</div>
           ) : (
             <SingleNew
+              addElement={this.addElement}
               removeHandle={this.removeElement}
               news={this.state.news}
             />

@@ -64,7 +64,7 @@ export default class SingleNew extends Component {
   renderTitles(title, index) {
     return (
       <div style={styles.titles}>
-        "{title}"<Button id={index} onClick={this.props.removeHandle} variant="contained">Remove</Button>
+        "{title}"<Button id={index} onClick={this.props.removeHandle} variant="contained">Remove</Button><Button id={index} onClick={this.props.addElement}>add</Button>
       </div>
     );
   }
