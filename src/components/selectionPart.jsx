@@ -5,7 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-export default function BasicSelect({setURL}) {
+export default function BasicSelect({setURL, defaultValue}) {
   const handleChange = (event) => {
     setURL(event.target.value)
   };
@@ -15,7 +15,7 @@ export default function BasicSelect({setURL}) {
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Channel</InputLabel>
         <Select
-          defaultValue={3}
+          defaultValue={defaultValue}
           label="channel"
           onChange={handleChange}
           inputProps={{

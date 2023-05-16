@@ -20,66 +20,48 @@ const styles = {
   },
 };
 export default class News extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      news: [],
-      url: urls[3],
-      loading: "Loading...",
-    };
-    this.setNews = this.setNews.bind(this);
-    this.getDataWithSelection = this.getDataWithSelection.bind(this);
-  }
-  componentDidMount() {
-    this.getData();
-  }
-  componentDidUpdate() {
-    console.log("updated");
-  }
-  setNews(newsList) {
-    this.setState({
-      news: newsList,
-    });
-  }
-  getDataWithSelection(number) {
-    this.setState({
-      url: urls[number],
-      loading: "Loading...",
-      news: [],
-    });
-    this.getData();
-  }
-  setLoading = (str) => {
-    this.setState({
-      loading: str,
-    });
+  state = {
+    news: [],
+    loading: "Loading...",
   };
-  async getData() {
+  defaultValue = 3;
+  componentDidMount() {
+    this.getData(urls[this.defaultValue]);
+  }
+ 
+  getDataWithSelection = (number)=>{
+    console.log(number)
+    this.setState({
+      loading: "Loading...",
+      news: [],
+    });
+    this.getData(urls[number]);
+  }
+  async getData(url) {
     try {
-      const res = await axios.get(this.state.url);
+      const res = await axios.get(url);
       console.log(res.data.articles);
       res.data.articles.length === 0
-        ? this.setLoading("not found")
-        : this.setNews(res.data.articles);
+        ? this.setState({loading: 'zero news'})
+        : this.setState({news: res.data.articles})
     } catch (error) {
-      this.setLoading("not found");
+      this.setState({loading: 'network error!'})
       console.log(error);
     }
   }
-  removeElement = (e) => {
-    const idx = e.target.id;
-    this.setState((states) => {
-      const news = states.news;
-      news.splice(idx, 1);
-      return { news };
-    });
 
-  };
+  removeElement=(e)=>{
+    const idx = parseInt(e.target.id);
+    const myNews = this.state.news.filter((item, index)=> index !== idx);
+    this.setState({news: myNews});
+    if(myNews.length === 0 )
+      this.setState({loading: 'no New found'});
+  }
 
   render() {
     return (
       <>
-        {<BasicSelect setURL={this.getDataWithSelection} />}
+        {<BasicSelect defaultValue={this.defaultValue} setURL={this.getDataWithSelection} />}
         <div className="news" style={styles.news}>
           {this.state.news.length === 0 ? (
             <div>{this.state.loading}</div>
