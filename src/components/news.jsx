@@ -2,6 +2,8 @@ import axios from "axios";
 import { Component } from "react";
 import SingleNew from "./singleNew";
 import BasicSelect from "./selectionPart";
+import Loading from "./UI/loadingComponent";
+
 const urls = [
   "https://newsapi.org/v2/everything?q=apple&from=2023-05-12&to=2023-05-12&sortBy=popularity&apiKey=951549abbc764ab284db9ac5ad0c7026",
   "https://newsapi.org/v2/everything?q=tesla&from=2023-04-13&sortBy=publishedAt&apiKey=951549abbc764ab284db9ac5ad0c7026",
@@ -30,7 +32,6 @@ export default class News extends Component {
   }
 
   getDataWithSelection = (number) => {
-    console.log(number);
     this.setState({
       loading: "Loading...",
       news: [],
@@ -40,7 +41,7 @@ export default class News extends Component {
   async getData(url) {
     try {
       const res = await axios.get(url);
-      console.log(res.data.articles);
+      //console.log(res.data.articles);
       res.data.articles.length === 0
         ? this.setState({ loading: "zero news" })
         : this.setState({ news: res.data.articles });
@@ -72,7 +73,7 @@ export default class News extends Component {
         }
         <div className="news" style={styles.news}>
           {this.state.news.length === 0 ? (
-            <div>{this.state.loading}</div>
+            <Loading loading = {this.state.loading}/>
           ) : (
             <SingleNew
               addElement={this.addElement}

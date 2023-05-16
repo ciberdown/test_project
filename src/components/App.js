@@ -1,14 +1,15 @@
 import { Routes } from "react-router-dom";
 import { Route } from "react-router-dom";
-import "./App.css";
-import Rejister from "./components/register";
-import Search from "./components/search";
+import "../App.css";
+import Rejister from "./register";
+import Search from "./search";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import rtlPlugin from "stylis-plugin-rtl";
 import { prefixer } from "stylis";
 import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
-import News from "./components/news";
+import News from "./news";
+import Names from "./test";
 const theme = createTheme({
   direction: "rtl", // Both here and <body dir="rtl">
 });
@@ -19,8 +20,11 @@ const cacheRtl = createCache({
 });
 
 function App() {
-  return (
-    <News />
+  return (<>
+  <Names><p style={{fontFamily:'fantasy', fontSize:'2rem'}}>hello world</p></Names>
+   <News />
+  </>
+   
     // <CacheProvider value={cacheRtl} >
     //   <ThemeProvider theme={theme}>
     //     <div
